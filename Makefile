@@ -3,7 +3,7 @@
 ## Start the server (production, detached)
 run:
 	docker compose up -d --build
-	@echo "✅ ClawLink running on http://localhost:$${PORT:-6413}"
+	@echo "✅ ClawPulse running on http://localhost:$${PORT:-6413}"
 	@echo "📖 API docs: http://localhost:$${PORT:-6413}/docs"
 
 ## Start for local development (auto-reload)
@@ -21,7 +21,7 @@ logs:
 
 ## Check server health
 test:
-	@curl -sf http://localhost:$${PORT:-6413}/health && echo "✅ ClawLink is healthy" || echo "❌ ClawLink is not responding"
+	@curl -sf http://localhost:$${PORT:-6413}/health && echo "✅ ClawPulse is healthy" || echo "❌ ClawPulse is not responding"
 
 ## Pull latest and restart
 update:

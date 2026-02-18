@@ -1,8 +1,8 @@
-# ClawLink — standalone deploy (no git clone needed)
+# ClawPulse — standalone deploy (no git clone needed)
 # Uses the pre-built image from GitHub Container Registry (free, public)
 #
 # Usage:
-#   curl -O https://raw.githubusercontent.com/rodrigocava/clawlink/main/docker-compose.ghcr.yml
+#   curl -O https://raw.githubusercontent.com/rodrigocava/clawpulse/main/docker-compose.ghcr.yml
 #   docker compose -f docker-compose.ghcr.yml up -d
 #
 # Update to latest:
@@ -10,8 +10,8 @@
 #   docker compose -f docker-compose.ghcr.yml up -d
 
 services:
-  clawlink:
-    image: ghcr.io/rodrigocava/clawlink:latest
+  clawpulse:
+    image: ghcr.io/rodrigocava/clawpulse:latest
     restart: unless-stopped
     ports:
       - "${PORT:-6413}:6413"

@@ -1,16 +1,16 @@
-# ClawLink 🦞🔗
+# ClawPulse 🦞🔗
 
 > Connect your phone's context to your OpenClaw AI agent — privately.
 
-ClawLink is an **encrypted data relay** between the ClawLink mobile app (iOS & Android) and any OpenClaw instance. Your health, activity, and context data is encrypted before it ever leaves your device. The server stores only opaque blobs it cannot read.
+ClawPulse is an **encrypted data relay** between the ClawPulse mobile app (iOS & Android) and any OpenClaw instance. Your health, activity, and context data is encrypted before it ever leaves your device. The server stores only opaque blobs it cannot read.
 
 ---
 
 ## Quick start
 
 ```bash
-git clone https://github.com/rodrigocava/clawlink.git
-cd clawlink
+git clone https://github.com/rodrigocava/clawpulse.git
+cd clawpulse
 make run
 ```
 
@@ -80,8 +80,8 @@ Two options — pick whichever fits your setup:
 ### Option A — Clone & compose (includes build step)
 
 ```bash
-git clone https://github.com/rodrigocava/clawlink.git
-cd clawlink
+git clone https://github.com/rodrigocava/clawpulse.git
+cd clawpulse
 make run        # builds image locally + starts
 make test       # verify it's healthy
 ```
@@ -95,9 +95,9 @@ make update     # git pull + rebuild + restart
 
 ```bash
 # Download just the compose file
-curl -O https://raw.githubusercontent.com/rodrigocava/clawlink/main/docker-compose.ghcr.yml
+curl -O https://raw.githubusercontent.com/rodrigocava/clawpulse/main/docker-compose.ghcr.yml
 
-# Start (pulls ghcr.io/rodrigocava/clawlink:latest automatically)
+# Start (pulls ghcr.io/rodrigocava/clawpulse:latest automatically)
 docker compose -f docker-compose.ghcr.yml up -d
 
 # Verify
@@ -120,10 +120,10 @@ Then point a reverse proxy or Cloudflare Tunnel at port 6413.
 
 | Component | Status | Description |
 |-----------|--------|-------------|
-| **ClawLink Server** | ✅ Ready | This repo — self-hostable relay |
-| **ClawLink iOS** | 🔜 Soon | Swift/SwiftUI + HealthKit |
-| **ClawLink Android** | 📅 Roadmap | — |
-| **ClawLink Skill** | 🔜 Soon | OpenClaw integration |
+| **ClawPulse Server** | ✅ Ready | This repo — self-hostable relay |
+| **ClawPulse iOS** | 🔜 Soon | Swift/SwiftUI + HealthKit |
+| **ClawPulse Android** | 📅 Roadmap | — |
+| **ClawPulse Skill** | 🔜 Soon | OpenClaw integration |
 
 ---
 

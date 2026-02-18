@@ -1,12 +1,12 @@
 """
-ClawLink Sync Server
+ClawPulse Sync Server
 ====================
-Encrypted data relay between the ClawLink mobile app and any OpenClaw instance.
+Encrypted data relay between the ClawPulse mobile app and any OpenClaw instance.
 
 Privacy model: server stores only encrypted blobs. Plaintext never leaves the client.
 All encryption/decryption happens on the edges (mobile app + OpenClaw).
 
-GitHub: https://github.com/rodrigocava/clawlink
+GitHub: https://github.com/rodrigocava/clawpulse
 """
 
 import hashlib
@@ -32,13 +32,13 @@ MAX_PAYLOAD_BYTES = int(os.getenv("MAX_PAYLOAD_BYTES", str(10 * 1024 * 1024)))  
 limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(
-    title="ClawLink",
+    title="ClawPulse",
     description="""
-Encrypted data relay for the **ClawLink** mobile app (iOS & Android).
+Encrypted data relay for the **ClawPulse** mobile app (iOS & Android).
 
 ## How it works
 
-1. The ClawLink app encrypts your phone context data client-side
+1. The ClawPulse app encrypts your phone context data client-side
 2. The encrypted blob is uploaded here (server never sees plaintext)
 3. Your OpenClaw instance fetches the blob and decrypts it locally
 4. Analysis and insights happen entirely on your own infrastructure
@@ -54,12 +54,12 @@ All payloads expire automatically after **48 hours**.
 
 ## Self-hosting
 
-The server is open source. Run your own at: https://github.com/rodrigocava/clawlink
+The server is open source. Run your own at: https://github.com/rodrigocava/clawpulse
 """,
     version="1.0.0",
     contact={
-        "name": "ClawLink",
-        "url": "https://github.com/rodrigocava/clawlink",
+        "name": "ClawPulse",
+        "url": "https://github.com/rodrigocava/clawpulse",
     },
     license_info={"name": "MIT"},
 )
@@ -275,4 +275,4 @@ async def delete_sync(request: Request, token: str):
 )
 async def health_check():
     """Returns 200 OK if the server is running. Use for uptime monitoring."""
-    return StatusResponse(status="ok", message="ClawLink is running")
+    return StatusResponse(status="ok", message="ClawPulse is running")

@@ -1,10 +1,10 @@
 # AGENTS.md — Instructions for AI Agents
 
-This file tells you everything you need to deploy and operate ClawLink autonomously.
+This file tells you everything you need to deploy and operate ClawPulse autonomously.
 
-## What is ClawLink?
+## What is ClawPulse?
 
-ClawLink is a privacy-first encrypted data relay server. Mobile apps post encrypted health/context blobs to it; OpenClaw instances fetch and decrypt them locally. **The server never sees plaintext.**
+ClawPulse is a privacy-first encrypted data relay server. Mobile apps post encrypted health/context blobs to it; OpenClaw instances fetch and decrypt them locally. **The server never sees plaintext.**
 
 ## Requirements
 
@@ -15,15 +15,15 @@ ClawLink is a privacy-first encrypted data relay server. Mobile apps post encryp
 ## Deploy in 3 steps (Option A — clone + build)
 
 ```bash
-git clone https://github.com/rodrigocava/clawlink.git
-cd clawlink
+git clone https://github.com/rodrigocava/clawpulse.git
+cd clawpulse
 make run
 ```
 
 ## Deploy in 2 steps (Option B — pre-built image, no clone needed)
 
 ```bash
-curl -O https://raw.githubusercontent.com/rodrigocava/clawlink/main/docker-compose.ghcr.yml
+curl -O https://raw.githubusercontent.com/rodrigocava/clawpulse/main/docker-compose.ghcr.yml
 docker compose -f docker-compose.ghcr.yml up -d
 ```
 
@@ -33,10 +33,10 @@ That's it. The server is running.
 
 ```bash
 make test
-# Expected: ✅ ClawLink is healthy
+# Expected: ✅ ClawPulse is healthy
 
 curl http://localhost:6413/health
-# Expected: {"status":"ok","message":"ClawLink is running"}
+# Expected: {"status":"ok","message":"ClawPulse is running"}
 ```
 
 ## Configuration (optional)
@@ -57,7 +57,7 @@ cp .env.example .env
 
 ```env
 PORT=6413
-DATA_DIR=/srv/dev-disk-by-uuid-649a14d8-043c-4d63-9959-64d1bf74963b/docker_data/Config/clawlink
+DATA_DIR=/srv/dev-disk-by-uuid-649a14d8-043c-4d63-9959-64d1bf74963b/docker_data/Config/clawpulse
 DATA_TTL_HOURS=48
 ```
 
