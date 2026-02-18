@@ -69,7 +69,8 @@ Even with full database access, no personal data is recoverable without your pas
 
 ## Data retention
 
-Each payload expires automatically after **48 hours** (configurable via `DATA_TTL_HOURS`).
+Each payload expires automatically after **48 hours** by default. Clients can override per-upload
+via the `X-TTL-Hours` header (clamped to 1–168h). Server-wide default is `DATA_TTL_HOURS`.
 Multiple datapoints accumulate over time — e.g. hourly sync = up to 48 datapoints.
 Expired rows are purged on every write, read, and via the `/cleanup` endpoint.
 
@@ -77,7 +78,7 @@ Expired rows are purged on every write, read, and via the `/cleanup` endpoint.
 
 The server is open source. Run your own at: https://github.com/rodrigocava/clawpulse
 """,
-    version="2.0.0",
+    version="2.1.0",
     contact={
         "name": "ClawPulse",
         "url": "https://github.com/rodrigocava/clawpulse",
@@ -165,8 +166,22 @@ def now_utc() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def expiry_utc() -> str:
-    return (datetime.now(timezone.utc) + timedelta(hours=DATA_TTL_HOURS)).isoformat()
+def expiry_utc(ttl_hours: int = DATA_TTL_HOURS) -> str:
+    return (datetime.now(timezone.utc) + timedelta(hours=ttl_hours)).isoformat()
+
+
+TTL_MIN_HOURS = 1
+TTL_MAX_HOURS = 168  # 7 days
+
+
+def parse_ttl_header(value: str | None) -> int:
+    """Parse X-TTL-Hours header. Clamps to [1, 168]. Falls back to DATA_TTL_HOURS on invalid input."""
+    if value is None:
+        return DATA_TTL_HOURS
+    try:
+        return max(TTL_MIN_HOURS, min(int(value), TTL_MAX_HOURS))
+    except (ValueError, TypeError):
+        return DATA_TTL_HOURS
 
 
 async def purge_expired_for_token(db: aiosqlite.Connection, token_hash: str) -> None:
@@ -226,14 +241,17 @@ async def startup() -> None:
     dependencies=[Depends(verify_client_secret)],
 )
 @limiter.limit("10/minute")
-async def upload_sync(request: Request, data: SyncUpload):
+async def upload_sync(request: Request, data: SyncUpload, x_ttl_hours: str | None = Header(default=None)):
     """
     Upload an encrypted payload. Each upload creates a **new datapoint** — previous
-    uploads are not replaced. All datapoints for a token expire after `DATA_TTL_HOURS`.
+    uploads are not replaced.
 
     - **token**: Your UUID (only its SHA-256 hash is stored)
     - **payload**: Base64-encoded AES-256-GCM encrypted blob
+    - **X-TTL-Hours** *(optional header)*: How long this datapoint should live, in hours.
+      Clamped to `[1, 168]` (1h–7 days). Defaults to `DATA_TTL_HOURS` (48h) if omitted or invalid.
     """
+    ttl_hours = parse_ttl_header(x_ttl_hours)
     token_hash = hash_token(data.token)
     db = await get_db()
     try:
@@ -241,13 +259,13 @@ async def upload_sync(request: Request, data: SyncUpload):
         await check_quota(db, token_hash, data.payload)
         await db.execute(
             "INSERT INTO sync_data (token_hash, payload, created_at, expires_at) VALUES (?, ?, ?, ?)",
-            (token_hash, data.payload, now_utc(), expiry_utc()),
+            (token_hash, data.payload, now_utc(), expiry_utc(ttl_hours)),
         )
         await db.commit()
     finally:
         await db.close()
 
-    return StatusResponse(status="ok", message=f"Stored. Expires in {DATA_TTL_HOURS}h.")
+    return StatusResponse(status="ok", message=f"Stored. Expires in {ttl_hours}h.")
 
 
 @app.get(
